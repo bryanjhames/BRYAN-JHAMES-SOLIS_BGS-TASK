@@ -16,6 +16,9 @@ public class ShopManager : MonoBehaviour
     private PlayerDataManager dataManager;
     private PlayerDataUI playerDataUI;
 
+    private bool isClearingText = false;
+    private Coroutine clearTextCoroutine;
+
     private void Start()
     {
         dataManager = PlayerDataManager.Instance;
@@ -56,13 +59,20 @@ public class ShopManager : MonoBehaviour
             resultText.text = "Not enough coins!";
         }
 
-        StartCoroutine(ClearResultTextAfterDelay(2f)); // Start the coroutine to clear the text after 2 seconds
+      if (isClearingText && clearTextCoroutine != null)
+        {
+            StopCoroutine(clearTextCoroutine); // Stop the previous coroutine if it's running
+        }
+
+        clearTextCoroutine = StartCoroutine(ClearResultTextAfterDelay(2f)); // Start or restart the coroutine to clear the text after 2 seconds
     }
 
     private IEnumerator ClearResultTextAfterDelay(float delay)
     {
+        isClearingText = true;
         yield return new WaitForSeconds(delay);
         resultText.text = string.Empty;
+        isClearingText = false;
     }
 
     private void UpdatePlayerCoinsUI()
