@@ -3,6 +3,7 @@ using TMPro;
 
 public class PlayerDataUI : MonoBehaviour
 {
+    public static PlayerDataUI Instance { get; private set;}
     [SerializeField] private TMP_Text coinsText;
     [SerializeField] private TMP_Text gemsText;
 

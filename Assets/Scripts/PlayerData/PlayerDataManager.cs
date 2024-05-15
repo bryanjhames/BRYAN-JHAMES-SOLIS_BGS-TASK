@@ -3,7 +3,6 @@ using UnityEngine;
 public class PlayerDataManager : MonoBehaviour
 {
     public static PlayerDataManager Instance { get; private set; }
-
     public PlayerData playerData;
 
     private void Awake()
@@ -12,6 +11,8 @@ public class PlayerDataManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            // Initialize player data with initial values
+            playerData = new PlayerData(1000, 100);
         }
         else
         {
@@ -19,34 +20,36 @@ public class PlayerDataManager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        LoadPlayerData();
-    }
-
-    public void SavePlayerData()
-    {
-        PlayerPrefs.SetInt("coin", playerData.coins);
-        PlayerPrefs.SetInt("gem", playerData.gems);
-    }
-
-    public void LoadPlayerData()
-    {
-        int coins = PlayerPrefs.GetInt("coin", 1000); // Default to 0 if no data exists
-        int gems = PlayerPrefs.GetInt("gem", 100); // Default to 0 if no data exists
-
-        playerData = new PlayerData(coins, gems);
-    }
-
     public void AddCoins(int amount)
     {
         playerData.coins += amount;
-        SavePlayerData();
+        OnDataChanged();
+    }
+
+    public void SpendCoins(int amount)
+    {
+        if (playerData.coins >= amount)
+        {
+            playerData.coins -= amount;
+            OnDataChanged();
+        }
     }
 
     public void AddGems(int amount)
     {
         playerData.gems += amount;
-        SavePlayerData();
+        OnDataChanged();
     }
+
+    public void SpendGems(int amount)
+    {
+        if (playerData.gems >= amount)
+        {
+            playerData.gems -= amount;
+            OnDataChanged();
+        }
+    }
+
+    public delegate void DataChanged();
+    public event DataChanged OnDataChanged;
 }

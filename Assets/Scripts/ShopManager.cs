@@ -9,12 +9,24 @@ public class ShopManager : MonoBehaviour
     public Item[] itemsForSale;
 
     public TMP_Text playerCoinsText;
-    private int playerCoins = 1000; // Example starting coins
+
+    private PlayerDataManager dataManager;
+    private PlayerDataUI playerDataUI;
 
     private void Start()
     {
+        dataManager = PlayerDataManager.Instance;
+        playerDataUI = FindObjectOfType<PlayerDataUI>();
+
         InitializeShop();
         UpdatePlayerCoinsUI();
+
+        dataManager.OnDataChanged += UpdatePlayerCoinsUI; // Subscribe to the data change event
+    }
+
+    private void OnDestroy()
+    {
+        dataManager.OnDataChanged -= UpdatePlayerCoinsUI; // Unsubscribe from the event
     }
 
     private void InitializeShop()
@@ -29,10 +41,9 @@ public class ShopManager : MonoBehaviour
 
     public void PurchaseItem(Item item)
     {
-        if (playerCoins >= item.price)
+        if (dataManager.playerData.coins >= item.price)
         {
-            playerCoins -= item.price;
-            UpdatePlayerCoinsUI();
+            dataManager.SpendCoins(item.price);
             Debug.Log("Purchased: " + item.itemName);
         }
         else
@@ -43,6 +54,7 @@ public class ShopManager : MonoBehaviour
 
     private void UpdatePlayerCoinsUI()
     {
-        playerCoinsText.text = "Coins: " + playerCoins.ToString();
+        playerCoinsText.text = "Coins: " + dataManager.playerData.coins.ToString();
+        playerDataUI.UpdateUI();
     }
 }
