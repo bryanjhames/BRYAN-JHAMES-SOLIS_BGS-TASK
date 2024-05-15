@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -9,6 +11,7 @@ public class ShopManager : MonoBehaviour
     public Item[] itemsForSale;
 
     public TMP_Text playerCoinsText;
+    public TMP_Text resultText;
 
     private PlayerDataManager dataManager;
     private PlayerDataUI playerDataUI;
@@ -45,11 +48,21 @@ public class ShopManager : MonoBehaviour
         {
             dataManager.SpendCoins(item.price);
             Debug.Log("Purchased: " + item.itemName);
+            resultText.text = "Purchased: " + item.itemName;
         }
         else
         {
             Debug.Log("Not enough coins!");
+            resultText.text = "Not enough coins!";
         }
+
+        StartCoroutine(ClearResultTextAfterDelay(2f)); // Start the coroutine to clear the text after 2 seconds
+    }
+
+    private IEnumerator ClearResultTextAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        resultText.text = string.Empty;
     }
 
     private void UpdatePlayerCoinsUI()

@@ -13,6 +13,8 @@ public class SO_BodyPart : ScriptableObject
     public string bodyPartName;
     public int bodyPartAnimationID;
 
+    public bool isPurchased; //additional
+
     // List Containing All Body Part Animations
     public List<AnimationClip> allBodyPartAnimations = new List<AnimationClip>();
 }
