@@ -16,8 +16,8 @@ public class PlayerDataUI : MonoBehaviour
         PlayerDataManager dataManager = PlayerDataManager.Instance;
         if (dataManager != null && dataManager.playerData != null)
         {
-            coinsText.text = "Coins: " + dataManager.playerData.coins;
-            gemsText.text = "Gems: " + dataManager.playerData.gems;
+            coinsText.text = dataManager.playerData.coins.ToString();
+            gemsText.text = dataManager.playerData.gems.ToString();
         }
     }
 }
